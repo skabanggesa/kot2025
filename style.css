@@ -1,0 +1,118 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #004d99;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    background-color: #0066cc;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.tab-button:hover, .tab-button.active {
+    background-color: #003366;
+}
+
+.content {
+    padding: 20px;
+}
+
+.tab-content {
+    display: none;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Gaya Jadual */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+/* Gaya Kontrol dan Dropdown */
+.controls {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.controls label, .controls select {
+    margin-right: 15px;
+}
+
+/* Gaya Paparan Senarai Pemenang */
+.event-result-container {
+    margin-bottom: 30px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    background-color: #ffffff;
+}
+
+.event-result-container h4 {
+    color: #004d99;
+    border-bottom: 2px solid #004d99;
+    padding-bottom: 5px;
+    margin-top: 0;
+}
+
+/* 🏆 Gaya untuk Paparan Rekod Kejohanan (BARU) 🏆 */
+.record-display {
+    background-color: #e6f7ff; /* Warna latar belakang lembut (biru muda) */
+    border-left: 5px solid #007bff;
+    padding: 10px 15px;
+    margin-top: 15px;
+    margin-bottom: 5px; /* Kurangkan margin bawah sedikit */
+    border-radius: 4px;
+    font-size: 0.95em;
+}
+
+.record-display p {
+    margin: 5px 0;
+    line-height: 1.4;
+}
+
+.record-display strong {
+    color: #004d99; /* Warna biru gelap untuk label */
+}

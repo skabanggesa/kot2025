@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kejohanan Olahraga SK Abang Gesa</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+    </head>
+<body>
+
+    <header>
+        <h1>🏆 Kejohanan Olahraga Tahunan SK Abang Gesa 🏅</h1>
+    </header>
+
+    <nav class="tabs">
+        <button class="tab-button active" onclick="showTab('peserta')">1. Pengurusan Peserta</button>
+        <button class="tab-button" onclick="showTab('balapan')">2. Acara Balapan</button>
+        <button class="tab-button" onclick="showTab('padangJarak')">3. Lompat Jauh & Lontar Peluru</button>
+        <button class="tab-button" onclick="showTab('padangTinggi')">4. Lompat Tinggi</button>
+        <button class="tab-button" onclick="showTab('relay')">5. Relay</button>
+        <button class="tab-button" onclick="showTab('analisis')">6. Analisis</button>
+    </nav>
+
+    <main class="content">
+<div id="peserta" class="tab-content active">
+    <h3>Pengurusan Peserta</h3>
+    <p>Data peserta dimuatkan dari data.csv buat kali pertama, dan disimpan ke Firestore. Data semasa dipaparkan di bawah.</p>
+    
+    <div class="controls">
+        <button onclick="loadParticipantsFromCSVAndSave()" class="action-button primary">
+            Muat Semula Peserta (dari data.csv) & Simpan ke Firebase
+        </button>
+
+        <button onclick="resetAllDataConfirmation()" class="action-button danger">
+            ❌ PADAM/RESET SEMUA KEPUTUSAN ACARA (Firestore)
+        </button>
+    </div>
+
+    <h4>Peserta Semasa (126 rekod)</h4>
+    <div id="pesertaTable">Memuatkan data...</div>
+</div>
+
+        <div id="balapan" class="tab-content">
+            <h2>Acara Balapan</h2>
+            <div class="controls">
+                <label for="trackEvent">Acara:</label>
+                <select id="trackEvent" onchange="populateParticipantTable('balapan')"></select>
+                <label for="trackJantina">Jantina:</label>
+                <select id="trackJantina" onchange="populateParticipantTable('balapan')"></select>
+                <label for="trackUmur">Kategori Umur:</label>
+                <select id="trackUmur" onchange="populateParticipantTable('balapan')"></select>
+                <button onclick="saveResults('balapan')">Simpan Keputusan (Firebase)</button>
+            </div>
+            <div id="trackResults">
+                </div>
+        </div>
+
+        <div id="padangJarak" class="tab-content">
+            <h2>Acara Padang (Jarak) - Lompat Jauh & Lontar Peluru</h2>
+            <div class="controls">
+                <label for="distanceEvent">Acara:</label>
+                <select id="distanceEvent" onchange="populateParticipantTable('padangJarak')"></select>
+                <label for="distanceJantina">Jantina:</label>
+                <select id="distanceJantina" onchange="populateParticipantTable('padangJarak')"></select>
+                <label for="distanceUmur">Kategori Umur:</label>
+                <select id="distanceUmur" onchange="populateParticipantTable('padangJarak')"></select>
+                <button onclick="saveResults('padangJarak')">Simpan Keputusan (Firebase)</button>
+            </div>
+            <div id="distanceResults">
+                 </div>
+        </div>
+
+        <div id="padangTinggi" class="tab-content">
+            <h2>Acara Padang (Tinggi) - Lompat Tinggi</h2>
+            <div class="controls">
+                <label for="heightEvent">Acara:</label>
+                <select id="heightEvent" onchange="populateParticipantTable('padangTinggi')"></select>
+                <label for="heightJantina">Jantina:</label>
+                <select id="heightJantina" onchange="populateParticipantTable('padangTinggi')"></select>
+                <label for="heightUmur">Kategori Umur:</label>
+                <select id="heightUmur" onchange="populateParticipantTable('padangTinggi')"></select>
+                <button onclick="saveResults('padangTinggi')">Simpan Keputusan (Firebase)</button>
+            </div>
+            <div id="heightResults">
+                </div>
+        </div>
+        
+        <div id="relay" class="tab-content">
+            <h2>Acara Relay (4x100 METER)</h2>
+            <div class="controls">
+                <label for="relayJantina">Jantina:</label>
+                <select id="relayJantina" onchange="populateRelayTable()"></select>
+                <label for="relayUmur">Kategori Umur:</label>
+                <select id="relayUmur" onchange="populateRelayTable()"></select>
+                <button onclick="saveRelayResults()">Simpan Keputusan Relay (Firebase)</button>
+            </div>
+            <div id="relayResults">
+                </div>
+        </div>
+
+        <div id="analisis" class="tab-content">
+            <h2>Analisis Keputusan</h2>
+            
+            <section>
+                <h3>Senarai Pemenang Mengikut Acara</h3>
+                <div class="controls">
+                    <label for="jantinaAnalisis">Jantina:</label>
+                    <select id="jantinaAnalisis" onchange="displayWinners()">
+                        <option value="Semua">Semua</option>
+                    </select>
+                    <label for="umurAnalisis">Kategori Umur:</label>
+                    <select id="umurAnalisis" onchange="displayWinners()">
+                        <option value="Semua">Semua</option>
+                    </select>
+                </div>
+                <div id="winnersList">
+                    </div>
+            </section>
+            
+            <section>
+                <h3>Analisis Pencapaian Rumah Sukan</h3>
+                <table id="houseAnalysisTable">
+                    <thead>
+                        <tr>
+                            <th>Rumah Sukan</th>
+                            <th>Johan (6 mata)</th>
+                            <th>Kedua (4 mata)</th>
+                            <th>Ketiga (3 mata)</th>
+                            <th>Lain-lain (1 mata)</th>
+                            <th>Jumlah Mata</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+                <p id="overallChampion"></p>
+            </section>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
